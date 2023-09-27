@@ -1,5 +1,7 @@
 package com.mysite.sbb.answer;
 
+import java.security.Principal;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -23,7 +25,7 @@ public class AnswerController {
 
     @PostMapping("/create/{id}")
     public String createAnswer(Model model, @PathVariable("id") Integer id, 
-            @Valid AnswerForm answerForm, BindingResult bindingResult) {
+            @Valid AnswerForm answerForm, BindingResult bindingResult, Principal Principal) {
         Question question = this.questionService.getQuestion(id);
         if (bindingResult.hasErrors()) {
             model.addAttribute("question", question);
