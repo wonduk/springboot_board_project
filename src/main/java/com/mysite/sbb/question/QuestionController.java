@@ -31,9 +31,10 @@ public class QuestionController {
     private final UserService userService;
 
 	@GetMapping("/list")
-    public String list(Model model, @RequestParam(value="page", defaultValue="0") int page) {
-        Page<Question> paging = this.questionService.getList(page);
+    public String list(Model model, @RequestParam(value="page", defaultValue="0") int page, @RequestParam(value = "kw", defaultValue = "") String kw) {
+        Page<Question> paging = this.questionService.getList(page, kw);
         model.addAttribute("paging", paging);
+        model.addAttribute("kw", kw);
         return "question_list";
     }
     
@@ -103,7 +104,8 @@ public class QuestionController {
         this.questionService.delete(question);
         return "redirect:/";
     }
-
+    
+    //추천 시 유저아이디를 가져와서 vote DB에 저장시켜서 늘려주는 함수
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/vote/{id}")
     public String questionVote(Principal principal, @PathVariable("id") Integer id){
@@ -112,4 +114,6 @@ public class QuestionController {
         this.questionService.vote(question, siteUser);
         return String.format("redirect:/question/detail/%s", id);
     }
+
+    
 }
