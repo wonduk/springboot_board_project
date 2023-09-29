@@ -17,8 +17,12 @@
                     <div th:text="${#temporals.format(question.createDate, 'yyyy-MM-dd HH:mm')}"></div>
                 </div>
             </div>
-            <!--질문 - 수정삭제 버튼-->
+            <!--질문 - 추천,수정삭제 버튼-->
             <div class="my-3">
+                <a href="javascript:void(0);" class="recommend btn btn-sm btn-outline-secondary"
+                    th:data-uri="@{|/question/vote/${question.id}|}">추천
+                    <span class="badge rounded-pill bg-success" th:text="${#lists.size(question.voter)}"></span>
+                </a>
                 <a th:href="@{|/question/modify/${question.id}|}" class="btn btn-sm btn-outline-secondary"
                     sec:authorize="isAuthenticated()"
                     th:if="${question.author != null and #authentication.getPrincipal().getUsername() == question.author.username}"
@@ -28,7 +32,7 @@
                         th:if="${question.author != null and #authentication.getPrincipal().getUsername() == question.author.username}"
                         th:text="삭제"></a>
             </div>
-            <!--/. 질문 - 수정삭제 버튼-->
+            <!--/. 질문 - 추천,수정삭제 버튼-->
         </div>
     </div>
     <!-- /. 질문 -->
@@ -54,6 +58,11 @@
             </div>
             <!--답글 수정,삭제 버튼-->
             <div class="my-3">
+                <a href="javascript:void(0);" class="recommend btn btn-sm btn-outline-secondary"
+                    th:data-uri="@{|/answer/vote/${answer.id}|}">
+                    추천
+                    <span class="badge rounded-pill bg-success" th:text="${#lists.size(answer.voter)}"></span>
+                </a>
                 <a th:href="@{|/answer/modify/${answer.id}|}" class="btn btn-sm btn-outline-secondary"
                 sec:authorize="isAuthenticated()"
                 th:if="${answer.author != null and #authentication.getPrincipal().getUsername() == answer.author.username}"
@@ -85,6 +94,16 @@
             };
         });
     });
+ 
+ //추천 시 정말로 추천하시겠습니까? 확인하는 함수
+ const recommend_elements = document.getElementsByClassName("recommend");
+ Array.from(recommend_elements).forEach(function(element){
+    element.addEventListener('click', function(){
+        if(confirm("추천하시겠습니까?")){
+            location.href = this.dataset.uri;
+        };
+    });
+ });
 </script>
 
 </html>

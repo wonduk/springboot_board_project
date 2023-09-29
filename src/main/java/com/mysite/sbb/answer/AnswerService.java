@@ -45,4 +45,10 @@ public class AnswerService {
     public void delete(Answer answer){
         this.answerRepository.delete(answer);
     }
+
+    //답글 추천시 유저정보 저장하는 함수
+    public void voter(Answer answer, SiteUser siteUser){
+        answer.getVoter().add(siteUser);
+        this.answerRepository.save(answer);
+    }
 }

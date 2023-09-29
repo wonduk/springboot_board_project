@@ -84,5 +84,15 @@ public class AnswerController {
 
     }
 
+    //추천 함수, service의 답글의 아이디와 현재 접속한 유저정보를 가져와서 voter테이블에 저장한 후 상세보기 페이지로 리로드
+    @PreAuthorize("isAuthenticated()")
+    @GetMapping("/vote/{id}")
+    public String answerVote(Principal principal, @PathVariable("id") Integer id){
+        Answer answer = this.answerService.getAnswer(id);
+        SiteUser siteUser = this.userService.getUser(principal.getName());
+        this.answerService.voter(answer, siteUser);
+        return String.format("redirect:/question/detail/%s", answer.getQuestion().getId());
+    }
+
 
 }
